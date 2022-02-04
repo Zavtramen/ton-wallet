@@ -252,11 +252,11 @@
 
     <!-- Modal -->
 
-    <div id="modal" style="display: none"></div>
+    <div id="modal" style="visibility: hidden"></div>
 
     <!-- Menu Dropdown -->
 
-    <div id="menuDropdown" style="display: none">
+    <div id="menuDropdown" style="visibility: hidden">
         <div id="menu_extension" class="dropdown-item" onclick="window.open('https://chrome.google.com/webstore/detail/ton-wallet/nphplpgoakhhjchkkhmiggakijnkhfnd', '_blank')">Chrome Extension</div>
         <div id="menu_about" class="dropdown-item">About</div>
         <div id="menu_magic" class="dropdown-item">TON Magic <div class="dropdown-toggle"></div></div>
@@ -269,7 +269,7 @@
 
     <!-- Receive Popup-->
 
-    <div id="receive" class="popup" style="display: none">
+    <div id="receive" class="popup" style="visibility: hidden">
         <div class="popup-title">Receive TON</div>
         <div class="popup-text">Share this address to receive TON.
         </div>
@@ -291,7 +291,7 @@
 
     <!-- Invoice Popup -->
 
-    <div id="invoice" class="popup" style="display: none">
+    <div id="invoice" class="popup" style="visibility: hidden">
         <div class="popup-title">Create Invoice</div>
 
         <div>
@@ -324,7 +324,7 @@
 
     <!-- Invoice QR Popup-->
 
-    <div id="invoiceQr" class="popup" style="display: none">
+    <div id="invoiceQr" class="popup" style="visibility: hidden">
         <div class="popup-title">Invoice QR</div>
 
         <div class="qr-container">
@@ -344,7 +344,7 @@
 
     <!-- Transaction Popup -->
 
-    <div id="transaction" class="popup" style="display: none">
+    <div id="transaction" class="popup" style="visibility: hidden">
         <div class="popup-title">Transaction</div>
 
         <div id="transactionAmount">+0.1 TON</div>
@@ -376,7 +376,7 @@
 
     <!-- Send Popup -->
 
-    <div id="send" class="popup" style="display: none">
+    <div id="send" class="popup" style="visibility: hidden">
         <div class="popup-title">Send TON</div>
 
         <div class="input-label">Recipient wallet address</div>
@@ -403,7 +403,7 @@
 
     <!-- Send Confirm Popup -->
 
-    <div id="sendConfirm" class="popup" style="display: none; padding-bottom: 10px">
+    <div id="sendConfirm" class="popup" style="visibility: hidden; padding-bottom: 10px">
         <div class="popup-title">Confirmation</div>
         <div class="popup-black-text">Do you want to send <b id="sendConfirmAmount">x TON</b> to:</div>
 
@@ -423,7 +423,7 @@
 
     <!-- Sign Confirm Popup -->
 
-    <div id="signConfirm" class="popup" style="display: none; padding-bottom: 10px">
+    <div id="signConfirm" class="popup" style="visibility: hidden; padding-bottom: 10px">
         <div class="popup-title">Confirmation</div>
         <div class="popup-black-text">Do you want to sign:</div>
 
@@ -441,7 +441,7 @@
 
     <!-- Processing Popup -->
 
-    <div id="processing" class="popup" style="display: none; text-align: center">
+    <div id="processing" class="popup" style="visibility: hidden; text-align: center">
         <tgs-player data-name="processing" src="assets/lottie/money.tgs" width="150" height="150"></tgs-player>
         <div class="popup-title">Sending TON</div>
         <div class="popup-grey-text">Please wait a few seconds for your<br>transaction to be processed..</div>
@@ -451,7 +451,7 @@
 
     <!-- Done Popup -->
 
-    <div id="done" class="popup" style="display: none; text-align: center; padding-bottom: 10px">
+    <div id="done" class="popup" style="visibility: hidden; text-align: center; padding-bottom: 10px">
         <tgs-player data-name="done" src="assets/lottie/done.tgs" width="150" height="150"></tgs-player>
         <div class="popup-title">Done!</div>
         <div class="popup-grey-text">1 TON have been send</div>
@@ -463,7 +463,7 @@
 
     <!-- About Popup -->
 
-    <div id="about" class="popup" style="display: none; text-align: center; padding-bottom: 10px">
+    <div id="about" class="popup" style="visibility: hidden; text-align: center; padding-bottom: 10px">
         <div class="popup-title">TON Wallet</div>
         <div class="popup-grey-text">
             Version: 1.1.28
@@ -493,7 +493,7 @@
 
     <!-- Change Password Popup -->
 
-    <div id="changePassword" class="popup" style="display: none; padding-bottom: 10px">
+    <div id="changePassword" class="popup" style="visibility: hidden; padding-bottom: 10px">
         <div class="popup-title">Change Password</div>
 
         <tgs-player data-name="changePassword" src="assets/lottie/lock.tgs" width="150" height="150"></tgs-player>
@@ -513,7 +513,7 @@
 
     <!-- Enter Password Popup -->
 
-    <div id="enterPassword" class="popup" style="display: none; padding-bottom: 10px">
+    <div id="enterPassword" class="popup" style="visibility: hidden; padding-bottom: 10px">
         <div class="popup-title">Password</div>
 
         <tgs-player data-name="enterPassword" src="assets/lottie/lock.tgs" width="150" height="150"></tgs-player>
@@ -528,7 +528,7 @@
 
     <!-- Log Out Popup -->
 
-    <div id="delete" class="popup" style="display: none; padding-bottom: 10px">
+    <div id="delete" class="popup" style="visibility: hidden; padding-bottom: 10px">
         <div class="popup-title">Log Out</div>
         <div class="popup-black-text">
             This will disconnect the wallet from this<br>
@@ -551,7 +551,7 @@
 
     <!-- Connect Ledger Popup -->
 
-    <div id="connectLedger" class="popup" style="display: none; padding-bottom: 10px">
+    <div id="connectLedger" class="popup" style="visibility: hidden; padding-bottom: 10px">
         <div class="popup-title">Connect Ledger</div>
         <div class="popup-black-text">
             Please use Edge/Google Chrome v89 or later.
@@ -570,7 +570,7 @@
 
     <!-- Notify-->
 
-    <div id="notify" style="display: none"></div>
+    <div id="notify" style="visibility: hidden"></div>
 </div>
 
 <!-- Scripts -->

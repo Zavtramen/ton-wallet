@@ -8,6 +8,8 @@ import {
     IMPORT_WORDS_COUNT,
     onInput, setAddr,
     toggle,
+    toggleFaded,
+    triggerClass
 } from "./Utils.js";
 
 import {initLotties, lotties} from "./Lottie.js";
@@ -41,6 +43,8 @@ class View {
         this.currentScreenName = null;
         /** @type   {boolean} */
         this.isTestnet = false;
+        /** @type   {string} */
+        this.popup = ''; // current opened popup
 
         this.createImportInputs();
 
@@ -304,17 +308,24 @@ class View {
     showPopup(name) {
         $('#enterPassword_input').value = '';
 
-        toggle($('#modal'), name !== '');
+        //popups switching without animations
+        if (this.popup && name) {
+            triggerClass(document.body, 'disable-transitions', 20);
+        }
+
+        toggleFaded($('#modal'), name !== '');
 
         const popups = ['receive', 'invoice', 'invoiceQr', 'send', 'sendConfirm', 'signConfirm', 'processing', 'done', 'menuDropdown', 'about', 'delete', 'changePassword', 'enterPassword', 'transaction', 'connectLedger'];
 
         popups.forEach(popup => {
-            toggle($('#' + popup), name === popup);
+            toggleFaded($('#' + popup), name === popup);
             const lottie = lotties[popup];
             if (lottie) {
                 toggleLottie(lottie, name === popup);
             }
         });
+
+        this.popup = name;
     }
 
     isPopupVisible(name) {
@@ -538,8 +549,8 @@ class View {
     }
 
     onSettingsClick() {
-        toggle($('#modal'), true);
-        toggle($('#menuDropdown'), true);
+        toggleFaded($('#modal'), true);
+        toggleFaded($('#menuDropdown'), true);
         toggle($('#menu_changePassword'), !this.isLedger);
         toggle($('#menu_backupWallet'), !this.isLedger);
     }
@@ -679,15 +690,13 @@ class View {
         const data = onyAddress ? this.myAddress : 'ton://transfer/' + this.myAddress;
         const text = onyAddress ? 'Wallet address copied to clipboard' : 'Transfer link copied to clipboard';
         $('#notify').innerText = copyToClipboard(data) ? text : 'Can\'t copy link';
-        toggle($('#notify'), true);
-        setTimeout(() => toggle($('#notify'), false), 2000);
+        triggerClass($('#notify'), 'faded-show', 2000)
     }
 
     onShowAddressOnDevice() {
         this.sendMessage('showAddressOnDevice');
         $('#notify').innerText = 'Please check the address on your device';
-        toggle($('#notify'), true);
-        setTimeout(() => toggle($('#notify'), false), 2000);
+        triggerClass($('#notify'), 'faded-show', 2000)
     }
 
     // RECEIVE INVOICE POPUP
@@ -720,8 +729,7 @@ class View {
 
     onShareInvoiceClick() {
         $('#notify').innerText = copyToClipboard(this.getInvoiceLink()) ? 'Transfer link copied to clipboard' : 'Can\'t copy link';
-        toggle($('#notify'), true);
-        setTimeout(() => toggle($('#notify'), false), 2000);
+        triggerClass($('#notify'), 'faded-show', 2000)
     }
 
     // RECEIVE INVOICE QR POPUP

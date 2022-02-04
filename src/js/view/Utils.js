@@ -16,6 +16,24 @@ function toggle(div, visible) {
     div.style.display = d;
 }
 
+function toggleFaded(div, isVisible) {
+    if (isVisible) {
+        div.classList.add('faded-show');
+        div.classList.remove('faded-hide');
+    } else {
+        div.classList.remove('faded-show');
+        div.classList.add('faded-hide');
+    }
+}
+
+function triggerClass(div, className, duration) {
+    div.classList.add(className);
+
+    setTimeout(() => {
+        div.classList.remove(className);
+    }, duration);
+}
+
 function createElement(params) {
     const item = document.createElement(params.tag);
     if (params.clazz) {
@@ -108,6 +126,8 @@ export {
     $,
     $$,
     toggle,
+    toggleFaded,
+    triggerClass,
     createElement,
     clearElement,
     onInput,
