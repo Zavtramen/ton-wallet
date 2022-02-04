@@ -130,7 +130,11 @@ class View {
         // });
 
         $('#import_alertBtn').addEventListener('click', () => alert('Too Bad. Without the secret words, you can\'t restore access to your wallet.'));
-        $('#import_continueBtn').addEventListener('click', async () => this.sendMessage('import', {words: await this.getImportWords()}));
+        $('#import_continueBtn').addEventListener('click', async (e) => {
+            e.currentTarget.classList.add('btn-loader');
+            e.currentTarget.disabled = true;
+            this.sendMessage('import', {words: await this.getImportWords()})
+        });
 
         $('#createdContinueButton').addEventListener('click', () => this.sendMessage('createPrivateKey'));
 
@@ -783,6 +787,11 @@ class View {
 
             case 'showEnterPasswordError':
                 $('#enterPassword_input').classList.add('error');
+                break;
+
+            case 'importCompleted':
+                $('#import_continueBtn').disabled = false;
+                $('#import_continueBtn').classList.remove('btn-loader');
                 break;
 
             case 'showScreen':

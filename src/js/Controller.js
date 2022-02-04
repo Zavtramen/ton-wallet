@@ -387,6 +387,10 @@ class Controller {
             }
 
             await this.importImpl(keyPair, walletClass);
+
+            this.sendToView('importCompleted', {state: 'success'});
+        } else {
+            this.sendToView('importCompleted', {state: 'failure'});
         }
     }
 

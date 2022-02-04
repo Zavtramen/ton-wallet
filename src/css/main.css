@@ -119,6 +119,28 @@ button {
     background-color: #2E2F31;
 }
 
+.btn-loader {
+    pointer-events: none;
+}
+
+.btn-loader:after {
+    content: '';
+    position: absolute;
+    transform: translate(8px, 2px);
+    width: 8px;
+    height: 8px;
+    border: 3px solid white;
+    border-left: 3px solid transparent;
+    border-radius: 50%;
+    animation: loading-animation-spin 2s infinite linear;
+}
+
+@keyframes loading-animation-spin {
+    to {
+        transform: translate(8px, 2px) rotate(1turn);
+    }
+}
+
 .screen {
     position: absolute;
     left: 0;
