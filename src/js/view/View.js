@@ -210,7 +210,7 @@ class View {
 
         $('#connectLedger_cancelBtn').addEventListener('click', () => this.closePopup());
 
-        $('#send_btn').addEventListener('click', () => {
+        $('#send_btn').addEventListener('click', (e) => {
             const amount = Number($('#amountInput').value);
             const amountNano = toNano(amount);
             if (amountNano.lte(0) || this.balance.lt(amountNano)) {
@@ -224,6 +224,7 @@ class View {
             }
             const comment = $('#commentInput').value;
 
+            this.toggleButtonLoader(e.currentTarget, true);
             this.sendMessage('onSend', {amount: amountNano.toString(), toAddress, comment});
         });
         $('#send_closeBtn').addEventListener('click', () => this.closePopup());
@@ -812,6 +813,11 @@ class View {
 
             case 'importCompleted':
                 this.toggleButtonLoader($('#import_continueBtn'), false);
+                break;
+
+            case 'sendCheckFailed':
+            case 'sendCheckSucceeded':
+                this.toggleButtonLoader($('#send_btn'), false);
                 break;
 
             case 'showScreen':

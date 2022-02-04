@@ -592,9 +592,11 @@ class Controller {
      */
     async showSendConfirm(amount, toAddress, comment, needQueue) {
         if (amount.lte(0) || this.balance.lt(amount)) {
+            this.sendToView('sendCheckFailed');
             return;
         }
         if (!Address.isValid(toAddress)) {
+            this.sendToView('sendCheckFailed');
             return;
         }
 
@@ -626,8 +628,9 @@ class Controller {
                 toAddress: toAddress,
                 fee: fee.toString()
             }, needQueue);
-
         }
+
+        this.sendToView('sendCheckSucceeded');
     }
 
     /**
