@@ -419,6 +419,7 @@ class Controller {
 
         this.sendToView('setIsLedger', this.isLedger);
         this.sendToView('showScreen', {name: 'readyToGo'});
+        this.sendToView('privateKeySaved');
     }
 
     async onChangePassword(oldPassword, newPassword) {
@@ -432,6 +433,7 @@ class Controller {
         await Controller.saveWords(words, newPassword);
 
         this.sendToView('closePopup');
+        this.sendToView('passwordChanged');
     }
 
     async onEnterPassword(password) {
@@ -444,6 +446,7 @@ class Controller {
         }
 
         this.afterEnterPassword(words);
+        this.sendToView('passwordEntered');
     }
 
     // MAIN

@@ -135,9 +135,24 @@ button {
     animation: loading-animation-spin 2s infinite linear;
 }
 
+.btn-lite.btn-loader:after {
+    transform: translate(6px, 3px);
+    width: 6px;
+    height: 6px;
+    border: 2px solid #3CA4DB;
+    border-left: 2px solid transparent;
+    animation: loading-animation-spin-small 2s infinite linear;
+}
+
 @keyframes loading-animation-spin {
     to {
         transform: translate(8px, 2px) rotate(1turn);
+    }
+}
+
+@keyframes loading-animation-spin-small {
+    to {
+        transform: translate(6px, 3px) rotate(1turn);
     }
 }
 

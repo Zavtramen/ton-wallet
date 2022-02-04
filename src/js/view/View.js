@@ -131,8 +131,7 @@ class View {
 
         $('#import_alertBtn').addEventListener('click', () => alert('Too Bad. Without the secret words, you can\'t restore access to your wallet.'));
         $('#import_continueBtn').addEventListener('click', async (e) => {
-            e.currentTarget.classList.add('btn-loader');
-            e.currentTarget.disabled = true;
+            this.toggleButtonLoader(e.currentTarget, true);
             this.sendMessage('import', {words: await this.getImportWords()})
         });
 
@@ -140,7 +139,7 @@ class View {
 
         $('#backup_continueBtn').addEventListener('click', () => this.sendMessage('onBackupDone'));
 
-        $('#createPassword_continueBtn').addEventListener('click', () => {
+        $('#createPassword_continueBtn').addEventListener('click', (e) => {
             const password = $('#createPassword_input').value;
             const passwordRepeat = $('#createPassword_repeatInput').value;
 
@@ -151,6 +150,7 @@ class View {
             } else if (password !== passwordRepeat) {
                 $('#createPassword_repeatInput').classList.add('error');
             } else {
+                this.toggleButtonLoader(e.currentTarget, true);
                 this.sendMessage('passwordCreated', {password});
             }
         });
@@ -241,7 +241,7 @@ class View {
         $('#about_closeBtn').addEventListener('click', () => this.closePopup());
 
         $('#changePassword_cancelBtn').addEventListener('click', () => this.closePopup());
-        $('#changePassword_okBtn').addEventListener('click', async () => {
+        $('#changePassword_okBtn').addEventListener('click', async (e) => {
             const oldPassword = $('#changePassword_oldInput').value;
             const newPassword = $('#changePassword_newInput').value;
             const passwordRepeat = $('#changePassword_repeatInput').value;
@@ -258,13 +258,15 @@ class View {
                 return;
             }
 
+            this.toggleButtonLoader(e.currentTarget, true);
             this.sendMessage('onChangePassword', {oldPassword, newPassword});
         });
 
         $('#enterPassword_cancelBtn').addEventListener('click', () => this.closePopup());
-        $('#enterPassword_okBtn').addEventListener('click', async () => {
+        $('#enterPassword_okBtn').addEventListener('click', async (e) => {
             const password = $('#enterPassword_input').value;
 
+            this.toggleButtonLoader(e.currentTarget, true);
             this.sendMessage('onEnterPassword', {password})
         });
 
@@ -291,6 +293,11 @@ class View {
         this.currentScreenName = name;
 
         window.scrollTo(0, 0);
+    }
+
+    toggleButtonLoader(el, enable) {
+        el.disabled = enable;
+        enable ? el.classList.add('btn-loader') : el.classList.remove('btn-loader');
     }
 
     showPopup(name) {
@@ -781,17 +788,30 @@ class View {
                 }
                 break;
 
+            case 'privateKeySaved':
+                this.toggleButtonLoader($('#createPassword_continueBtn'), false);
+                break;
+
+            case 'passwordChanged':
+                this.toggleButtonLoader($('#changePassword_okBtn'), false);
+                break;
+
             case 'showChangePasswordError':
+                this.toggleButtonLoader($('#changePassword_okBtn'), false);
                 $('#changePassword_oldInput').classList.add('error');
                 break;
 
+            case 'passwordEntered':
+                this.toggleButtonLoader($('#enterPassword_okBtn'), false);
+                break;
+
             case 'showEnterPasswordError':
+                this.toggleButtonLoader($('#enterPassword_okBtn'), false);
                 $('#enterPassword_input').classList.add('error');
                 break;
 
             case 'importCompleted':
-                $('#import_continueBtn').disabled = false;
-                $('#import_continueBtn').classList.remove('btn-loader');
+                this.toggleButtonLoader($('#import_continueBtn'), false);
                 break;
 
             case 'showScreen':
