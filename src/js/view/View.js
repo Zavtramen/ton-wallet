@@ -50,7 +50,7 @@ class View {
         this.createWordInputs({
             count: IMPORT_WORDS_COUNT,
             dropdownId: '#wordsPopup',
-            inputId: '#importInput',
+            inputId: '#importsInput',
             containerId: '#importWords',
             multiColumns: true
         });
@@ -587,6 +587,7 @@ class View {
             input.id = params.inputId.slice(1) + n;
             input.type = 'text';
             input.tabIndex = n + 1;
+            input.autocomplete = 'off';
             inputContainer.appendChild(input);
 
             input.addEventListener('focusin', onFocusIn);
@@ -613,7 +614,7 @@ class View {
     clearImportWords() {
         toggle($('#wordsPopup'), false);
         for (let i = 0; i < IMPORT_WORDS_COUNT; i++) {
-            const input = $('#importInput' + i);
+            const input = $('#importsInput' + i);
             input.value = '';
             input.classList.remove('error');
         }
@@ -652,7 +653,7 @@ class View {
         let isValid = true;
         const words = [];
         for (let i = 0; i < IMPORT_WORDS_COUNT; i++) {
-            const input = $('#importInput' + i);
+            const input = $('#importsInput' + i);
             const value = input.value.toLowerCase().trim();
             if (!value || this.mnemonicWords.indexOf(value) === -1) {
                 input.classList.add('error');
@@ -665,7 +666,7 @@ class View {
             isValid = await TonWeb.mnemonic.validateMnemonic(words);
             if (!isValid) {
                 for (let i = 0; i < IMPORT_WORDS_COUNT; i++) {
-                    const input = $('#importInput' + i);
+                    const input = $('#importsInput' + i);
                     input.classList.add('error');
                 }
             }
@@ -1014,7 +1015,7 @@ class View {
                         break;
                     case 'import':
                         this.clearImportWords();
-                        $('#importInput0').focus();
+                        $('#importsInput0').focus();
                         break;
                     case 'backup':
                         this.clearConfirmWords();
