@@ -294,6 +294,24 @@ class Controller {
         if (localStorage.getItem('words')) {
             this.sendToView('showScreen', {name: 'main'});
         } else {
+            this.sendToView('showScreen', {name: 'wordsConfirm', words: this.myMnemonicWords});
+        }
+    }
+
+    onConfirmDone(words) {
+        if (words) {
+            let isValid = true;
+
+            Object.keys(words).forEach(index => {
+                if (this.myMnemonicWords[index] !== words[index]) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                return;
+            }
+
             this.showCreatePassword();
         }
     }
@@ -844,6 +862,12 @@ class Controller {
                 break;
             case 'onBackupDone':
                 this.onBackupDone();
+                break;
+            case 'onConfirmBack':
+                this.showBackup(this.myMnemonicWords);
+                break;
+            case 'onConfirmDone':
+                this.onConfirmDone(params.words);
                 break;
             case 'showMain':
                 this.showMain();

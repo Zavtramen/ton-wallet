@@ -148,6 +148,26 @@ button {
     animation: loading-animation-spin-small 2s infinite linear;
 }
 
+.btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: none;
+    background-color: transparent;
+    background-image: url("../assets/arrow.svg");
+    transform: scaleX(-1);
+    opacity: 0.85;
+}
+
+.btn-back:hover {
+    opacity: 1;
+}
+
 @keyframes loading-animation-spin {
     to {
         transform: translate(8px, 2px) rotate(1turn);
@@ -170,13 +190,18 @@ button {
 }
 
 .middle {
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    left: 0;
     width: 100%;
-    transform: translate(0, -50%);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
+.middle-content {
+    text-align: center;
+}
+
 
 .addr {
     min-width: 24ch;
@@ -248,7 +273,7 @@ button {
     font-size: 15px;
 }
 
-/* IMPORT */
+/* IMPORT && BACKUP && CONFIRM */
 
 #import .btn-lite {
     font-weight: normal;
@@ -256,13 +281,16 @@ button {
     margin-bottom: 10px;
 }
 
-#importWords {
+#importWords,
+#confirmWords,
+#createWords {
     max-width: 276px;
     margin-left: auto;
     margin-right: auto;
 }
 
-#wordsPopup {
+#wordsPopup,
+#wordsConfirmPopup {
     position: absolute;
     background: white;
     padding-top: 4px;
@@ -296,13 +324,6 @@ button {
     background: #f0f0f0;
 }
 
-#createWords {
-    margin-top: 10px;
-    max-width: 272px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .word-item {
     float: left;
 }
@@ -316,16 +337,22 @@ button {
     margin-right: 4px;
 }
 
-#import .word-num {
+#import .word-num,
+#wordsConfirm .word-num {
     margin-right: 8px;
     margin-left: 16px;
 }
 
-#import input {
+#import input,
+#wordsConfirm input {
     width: 92px;
     height: 32px;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+#wordsConfirm input {
+    width: 190px;
 }
 
 .create-word-item {

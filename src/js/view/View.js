@@ -1,11 +1,12 @@
 import {
-    $, clearElement,
+    $, $$, clearElement,
     copyToClipboard,
     createElement,
     formatDate,
     formatDateFull,
     formatTime,
     IMPORT_WORDS_COUNT,
+    CONFIRM_WORDS_COUNT,
     onInput, setAddr,
     toggle,
     toggleFaded,
@@ -46,7 +47,20 @@ class View {
         /** @type   {string} */
         this.popup = ''; // current opened popup
 
-        this.createImportInputs();
+        this.createWordInputs({
+            count: IMPORT_WORDS_COUNT,
+            dropdownId: '#wordsPopup',
+            inputId: '#importInput',
+            containerId: '#importWords',
+            multiColumns: true
+        });
+        this.createWordInputs({
+            count: CONFIRM_WORDS_COUNT,
+            dropdownId: '#wordsConfirmPopup',
+            inputId: '#confirmInput',
+            containerId: '#confirmWords',
+            multiColumns: false
+        });
 
         initLotties().then(() => {
             const lottie = lotties[this.currentScreenName];
@@ -142,6 +156,41 @@ class View {
         $('#createdContinueButton').addEventListener('click', () => this.sendMessage('createPrivateKey'));
 
         $('#backup_continueBtn').addEventListener('click', () => this.sendMessage('onBackupDone'));
+
+        $('#wordsConfirm_backBtn').addEventListener('click', () => this.sendMessage('onConfirmBack'));
+
+        $('#wordsConfirm_continueBtn').addEventListener('click', () => {
+            const confirmWords = this.getConfirmWords();
+
+            if (!confirmWords.isWordsFromList) {
+                return;
+            }
+
+            if (!confirmWords.isRightWords) {
+                this.showAlert({
+                    title: 'Incorrect words',
+                    message: 'The secret words you have entered do not match the ones in the list.',
+                    buttons: [
+                        {
+                            label: 'SEE WORDS',
+                            callback: () => {
+                                this.sendMessage('onConfirmBack');
+                            }
+                        },
+                        {
+                            label: 'TRY AGAIN',
+                            callback: () => {
+                                this.closePopup();
+                            }
+                        },
+                    ]
+                });
+            } else {
+                this.sendMessage('onConfirmDone', {words: confirmWords.words});
+            }
+        });
+
+
 
         $('#createPassword_continueBtn').addEventListener('click', (e) => {
             const password = $('#createPassword_input').value;
@@ -284,7 +333,7 @@ class View {
     showScreen(name) {
         this.closePopup();
 
-        const screens = ['start', 'created', 'backup', 'import', 'createPassword', 'readyToGo', 'main'];
+        const screens = ['start', 'created', 'backup', 'wordsConfirm', 'import', 'createPassword', 'readyToGo', 'main'];
 
         screens.forEach(screen => {
             const display = screen === 'main' ? 'flex' : 'block';
@@ -305,6 +354,24 @@ class View {
         enable ? el.classList.add('btn-loader') : el.classList.remove('btn-loader');
     }
 
+    showAlert(params) {
+        $('#alert .popup-title').innerText = params.title;
+        $('#alert .popup-black-text').innerText = params.message;
+        $('#alert .popup-footer').innerHTML = '';
+
+        params.buttons?.forEach(button => {
+            const el = createElement({
+                tag: 'button',
+                clazz: 'btn-lite',
+                text: button.label
+            });
+            $('#alert .popup-footer').appendChild(el);
+            el.addEventListener('click', button.callback);
+        });
+
+        this.showPopup('alert');
+    }
+
     showPopup(name) {
         $('#enterPassword_input').value = '';
 
@@ -315,7 +382,7 @@ class View {
 
         toggleFaded($('#modal'), name !== '');
 
-        const popups = ['receive', 'invoice', 'invoiceQr', 'send', 'sendConfirm', 'signConfirm', 'processing', 'done', 'menuDropdown', 'about', 'delete', 'changePassword', 'enterPassword', 'transaction', 'connectLedger'];
+        const popups = ['alert', 'receive', 'invoice', 'invoiceQr', 'send', 'sendConfirm', 'signConfirm', 'processing', 'done', 'menuDropdown', 'about', 'delete', 'changePassword', 'enterPassword', 'transaction', 'connectLedger'];
 
         popups.forEach(popup => {
             toggleFaded($('#' + popup), name === popup);
@@ -374,30 +441,30 @@ class View {
         clearElement($('#createWords'));
     }
 
-    // IMPORT SCREEN
+    // IMPORT && CONFIRM SCREENS
 
-    createImportInputs() {
+    createWordInputs(params) {
+
         const onEnter = input => {
             const i = Number(input.getAttribute('tabindex'));
-            if (i === IMPORT_WORDS_COUNT) {
+            if (i === params.count) {
 
             } else {
-                $('#importInput' + i).focus();
+                $(params.inputId + i).focus();
             }
         };
 
-        this.importDropDown = new DropDown($('#wordsPopup'), onEnter, this.mnemonicWords);
-
+        const dropdown = new DropDown($(params.dropdownId), onEnter, this.mnemonicWords);
         let lastInput = null;
 
         const showWordsPopup = input => {
             const text = input.value;
             if (text === null || text.length === 0) {
-                toggle($('#wordsPopup'), false);
+                toggle($(params.dropdownId), false);
                 return;
             }
 
-            this.importDropDown.show(input, text.toLowerCase());
+            dropdown.show(input, text.toLowerCase());
         };
 
         function onWordInput(e) {
@@ -414,7 +481,7 @@ class View {
         };
 
         const onFocusOut = (e) => {
-            toggle($('#wordsPopup'), false);
+            toggle($(params.dropdownId), false);
             if (lastInput) {
                 const value = lastInput.value.toLowerCase().trim();
                 if (value.length > 0 && this.mnemonicWords.indexOf(value) === -1) {
@@ -429,19 +496,19 @@ class View {
             const input = e.target;
             switch (e.key) {
                 case 'Enter':
-                    const selectedText = this.importDropDown.getSelectedText();
+                    const selectedText = dropdown.getSelectedText();
                     if (selectedText) {
                         input.value = selectedText;
                         input.classList.remove('error');
-                        this.importDropDown.hide();
+                        dropdown.hide();
                     }
                     onEnter(input);
                     break;
                 case 'ArrowUp':
-                    this.importDropDown.up();
+                    dropdown.up();
                     break;
                 case 'ArrowDown':
-                    this.importDropDown.down();
+                    dropdown.down();
                     break;
             }
         };
@@ -449,12 +516,12 @@ class View {
         const onPaste = (event) => {
             const text = (event.clipboardData || window.clipboardData).getData('text');
             let arr = text.split(' ');
-            if (arr.length !== IMPORT_WORDS_COUNT) {
+            if (arr.length !== params.count) {
                 arr = text.split(',');
             }
-            if (arr.length === IMPORT_WORDS_COUNT) {
-                for (let i = 0; i < IMPORT_WORDS_COUNT; i++) {
-                    const input = $('#importInput' + i);
+            if (arr.length === params.count) {
+                for (let i = 0; i < params.count; i++) {
+                    const input = $(params.inputId + i);
                     const value = arr[i].toLowerCase().trim();
                     if (!value || this.mnemonicWords.indexOf(value) === -1) {
                         input.classList.add('error');
@@ -472,7 +539,7 @@ class View {
             const span = createElement({tag: 'span', clazz: 'word-num', text: (n + 1) + '.'});
             inputContainer.appendChild(span);
             const input = createElement({tag: 'input'});
-            input.id = 'importInput' + n;
+            input.id = params.inputId.slice(1) + n;
             input.type = 'text';
             input.tabIndex = n + 1;
             inputContainer.appendChild(input);
@@ -483,12 +550,18 @@ class View {
             input.addEventListener('paste', onPaste);
             onInput(input, onWordInput);
 
-            $('#importWords').appendChild(inputContainer);
+            $(params.containerId).appendChild(inputContainer);
         };
 
-        for (let i = 0; i < IMPORT_WORDS_COUNT / 2; i++) {
-            createInput(i);
-            createInput(i + IMPORT_WORDS_COUNT / 2);
+        if (params.multiColumns) {
+            for (let i = 0; i < params.count / 2; i++) {
+                createInput(i);
+                createInput(i + params.count / 2);
+            }
+        } else {
+            for (let i = 0; i < params.count ; i++) {
+                createInput(i);
+            }
         }
     }
 
@@ -498,6 +571,35 @@ class View {
             const input = $('#importInput' + i);
             input.value = '';
             input.classList.remove('error');
+        }
+    }
+
+    clearConfirmWords() {
+        toggle($('#wordsConfirmPopup'), false);
+        for (let i = 0; i < CONFIRM_WORDS_COUNT; i++) {
+            const input = $('#confirmInput' + i);
+            input.value = '';
+            input.setAttribute('data-word', '');
+            input.classList.remove('error');
+        }
+    }
+
+    setConfirmWords(words) {
+        const nums = Array(IMPORT_WORDS_COUNT)
+            .fill(0)
+            .map((_, i) => ({i, rnd: Math.random()}))
+            .sort((a, b) => a.rnd - b.rnd)
+            .map(i => i.i)
+            .slice(0, CONFIRM_WORDS_COUNT)
+            .sort((a, b) => a-b);
+
+        const spans = $$('#confirmWordsNums span');
+        for (let i = 0; i < CONFIRM_WORDS_COUNT; i++) {
+            const input = $('#confirmInput' + i);
+            input.setAttribute('data-index', nums[i]);
+            input.setAttribute('data-word', words[nums[i]]);
+            spans[i].innerText = nums[i] + 1;
+            input.parentNode.children[0].innerText = (nums[i] + 1) + '.';
         }
     }
 
@@ -525,6 +627,33 @@ class View {
         }
 
         return isValid ? words : null;
+    }
+
+    getConfirmWords() {
+        let isWordsFromList = true;
+        let isRightWords = true;
+        const words = {};
+
+        for (let i = 0; i < CONFIRM_WORDS_COUNT; i++) {
+            const input = $('#confirmInput' + i);
+            const value = input.value.toLowerCase().trim();
+            const index = input.getAttribute('data-index');
+            const validValue = input.getAttribute('data-word');
+            if (!value || this.mnemonicWords.indexOf(value) === -1) {
+                input.classList.add('error');
+                isWordsFromList = false;
+            }
+            if (value !== validValue) {
+                isRightWords = false;
+            }
+            words[index] = value;
+        }
+
+        return {
+            isWordsFromList,
+            isRightWords,
+            words: isWordsFromList && isRightWords ? words : null
+        }
     }
 
     // CREATE PASSWORD SCREEN
@@ -842,10 +971,17 @@ class View {
                         $('#importInput0').focus();
                         break;
                     case 'backup':
+                        this.clearConfirmWords();
                         this.setBackupWords(params.words);
+                        break;
+                    case 'wordsConfirm':
+                        this.clearConfirmWords();
+                        $('#confirmInput0').focus();
+                        this.setConfirmWords(params.words);
                         break;
                     case 'createPassword':
                         this.clearImportWords();
+                        this.clearConfirmWords();
                         this.clearCreatePassword();
                         $('#createPassword_input').focus();
                         break;

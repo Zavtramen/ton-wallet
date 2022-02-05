@@ -121,6 +121,7 @@ function copyToClipboard(text) {
 }
 
 const IMPORT_WORDS_COUNT = 24;
+const CONFIRM_WORDS_COUNT = 3;
 
 export {
     $,
@@ -137,5 +138,6 @@ export {
     formatDate,
     formatDateFull,
     copyToClipboard,
-    IMPORT_WORDS_COUNT
+    IMPORT_WORDS_COUNT,
+    CONFIRM_WORDS_COUNT
 };
