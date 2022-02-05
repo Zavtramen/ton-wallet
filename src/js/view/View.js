@@ -176,7 +176,31 @@ class View {
 
         $('#createdContinueButton').addEventListener('click', () => this.sendMessage('createPrivateKey'));
 
-        $('#backup_continueBtn').addEventListener('click', () => this.sendMessage('onBackupDone'));
+        $('#backup_continueBtn').addEventListener('click', () => {
+            const currentTime = +new Date();
+            if (currentTime - this.backupShownTime < 60000) { //1 minute
+                this.showAlert({
+                    title: 'Sure done?',
+                    message: 'You didn\'t have enough time to write these words down.',
+                    buttons: [
+                        {
+                            label: 'I\'M SURE',
+                            callback: () => {
+                                this.sendMessage('onBackupDone');
+                            }
+                        },
+                        {
+                            label: 'OK, SORRY',
+                            callback: () => {
+                                this.closePopup();
+                            }
+                        },
+                    ]
+                });
+            } else {
+                this.sendMessage('onBackupDone')
+            }
+        });
 
         $('#wordsConfirm_backBtn').addEventListener('click', () => this.sendMessage('onConfirmBack'));
 
@@ -995,6 +1019,7 @@ class View {
                     case 'backup':
                         this.clearConfirmWords();
                         this.setBackupWords(params.words);
+                        this.backupShownTime = +new Date();
                         break;
                     case 'wordsConfirm':
                         this.clearConfirmWords();
