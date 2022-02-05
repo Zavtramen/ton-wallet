@@ -147,7 +147,28 @@ class View {
         //     window.open('https://exchange.mercuryo.io/?currency=TONCOIN&address=' + this.myAddress, '_blank');
         // });
 
-        $('#import_alertBtn').addEventListener('click', () => alert('Too Bad. Without the secret words, you can\'t restore access to your wallet.'));
+        $('#import_backBtn').addEventListener('click', () => this.sendMessage('onImportBack'));
+
+        $('#import_alertBtn').addEventListener('click', () => {
+            this.showAlert({
+                title: 'Too Bad',
+                message: 'Without the secret words, you can\'t restore access to your wallet.',
+                buttons: [
+                    {
+                        label: 'CANCEL',
+                        callback: () => {
+                            this.sendMessage('onImportBack');
+                        }
+                    },
+                    {
+                        label: 'ENTER WORDS',
+                        callback: () => {
+                            this.closePopup();
+                        }
+                    },
+                ]
+            });
+        });
         $('#import_continueBtn').addEventListener('click', async (e) => {
             this.toggleButtonLoader(e.currentTarget, true);
             this.sendMessage('import', {words: await this.getImportWords()})
@@ -963,6 +984,7 @@ class View {
                 switch (params.name) {
                     case 'start':
                         this.clearBalance();
+                        this.clearImportWords();
                         break;
                     case 'created':
                         break;
@@ -976,6 +998,7 @@ class View {
                         break;
                     case 'wordsConfirm':
                         this.clearConfirmWords();
+                        this.clearBackupWords();
                         $('#confirmInput0').focus();
                         this.setConfirmWords(params.words);
                         break;

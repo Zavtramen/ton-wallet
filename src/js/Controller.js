@@ -866,6 +866,9 @@ class Controller {
             case 'onConfirmBack':
                 this.showBackup(this.myMnemonicWords);
                 break;
+            case 'onImportBack':
+                this.sendToView('showScreen', {name: 'start'})
+                break;
             case 'onConfirmDone':
                 this.onConfirmDone(params.words);
                 break;
