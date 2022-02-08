@@ -375,6 +375,10 @@ button {
     border: 1px solid #DCDCDC;
 }
 
+#wordsConfirmPopup {
+    width: 190px;
+}
+
 .words-popup-item {
     font-size: 14px;
     line-height: 30px;
