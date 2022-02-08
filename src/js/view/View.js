@@ -1019,6 +1019,15 @@ class View {
                 this.toggleButtonLoader($('#send_btn'), false);
                 break;
 
+            case 'sendCheckCantPayFee':
+                this.toggleButtonLoader($('#send_btn'), false);
+                $('#amountInput').classList.add('error');
+
+                $('#notify').innerText = `Estimated fee is ~${formatNanograms(params.fee)} TON`;
+                triggerClass($('#notify'), 'faded-show', 3000)
+
+                break;
+
             case 'showScreen':
                 if (params.noAnimation) {
                     triggerClass(document.body, 'disable-animations', 300);

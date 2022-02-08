@@ -620,6 +620,11 @@ class Controller {
 
         const fee = await this.getFees(amount, toAddress, comment);
 
+        if (this.balance.sub(fee).lt(amount)) {
+            this.sendToView('sendCheckCantPayFee', {fee});
+            return;
+        }
+
         if (this.isLedger) {
 
             this.sendToView('showPopup', {

@@ -53,11 +53,11 @@ input {
     -webkit-user-select: auto;
     -moz-user-select: auto;
 
+    background-image: linear-gradient(rgba(215, 77, 77, 0), rgba(215, 77, 77, 0)), linear-gradient(rgba(60, 164, 219, 0), rgba(60, 164, 219, 0)), linear-gradient(#e7e7e7, #e7e7e7);
+    background-size: 0% 1px, 0% 1px, 100% 1px;
     background-position: bottom center;
     background-repeat: no-repeat;
     transition: 0.2s background-image, 0s 0.2s background-size;
-    background-size: 0% 1px, 0% 1px, 100% 1px;
-    background-image: linear-gradient(rgba(215, 77, 77, 0), rgba(215, 77, 77, 0)), linear-gradient(rgba(60, 164, 219, 0), rgba(60, 164, 219, 0)), linear-gradient(#e7e7e7, #e7e7e7);
 }
 
 input:focus {
