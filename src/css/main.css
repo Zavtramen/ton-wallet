@@ -10,8 +10,9 @@ body.plugin {
     min-height: 600px;
 }
 
-body.disable-transitions * {
+body.disable-animations * {
     transition-duration: 0s !important;
+    animation-duration: 0s !important;
 }
 
 .body-container {
@@ -149,23 +150,24 @@ button {
 }
 
 .btn-back {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 20px;
-    height: 20px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 20px 20px;
     border: none;
     background-color: transparent;
     background-image: url("../assets/arrow.svg");
     transform: scaleX(-1);
-    opacity: 0.85;
+    border-radius: 100%;
+    background-color: white;
 }
 
 .btn-back:hover {
-    opacity: 1;
+   background-color: #F7F7F7;
 }
 
 @keyframes loading-animation-spin {
@@ -202,6 +204,71 @@ button {
     text-align: center;
 }
 
+.screen.faded-show {
+    opacity: 1;
+    visibility: inherit !important;
+    transition: 0.3s opacity, 0.3s visibility step-start;
+}
+
+.screen.faded-hide {
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s opacity, 0.3s visibility step-end;
+    animation: 99999999s 0.3s screen-delayed-overflow;
+}
+
+.screen.faded-show .middle {
+    animation: screen-show-left 0.3s ease-out;
+}
+
+.screen.faded-hide .middle {
+    animation: screen-hide-left 0.3s ease-in;
+}
+
+.screen.faded-show.isBack .middle {
+    animation: screen-show-right 0.3s ease-out;
+}
+
+.screen.faded-hide.isBack .middle {
+    animation: screen-hide-right 0.3s ease-in;
+}
+
+.screen.faded-show .screen-lottie {
+    opacity: 1;
+    transform: scale(1);
+    transition: 0.2s opacity, transform 0.2s;
+}
+
+.screen.faded-hide .screen-lottie {
+    opacity: 0;
+    transform: scale(0.3);
+    transition: 0.2s opacity, transform 0.25s;
+}
+
+
+@keyframes screen-delayed-overflow {
+    from { overflow: hidden }
+}
+
+@keyframes screen-hide-left {
+    from { transform: translateX(0px) }
+    to { transform: translateX(-25px) }
+}
+
+@keyframes screen-hide-right {
+    from { transform: translateX(0px) }
+    to { transform: translateX(25px) }
+}
+
+@keyframes screen-show-left {
+    from { transform: translateX(25px) }
+    to { transform: translateX(0px) }
+}
+
+@keyframes screen-show-right {
+    from { transform: translateX(-25px) }
+    to { transform: translateX(0px) }
+}
 
 .addr {
     min-width: 24ch;
@@ -620,13 +687,21 @@ button {
     font-size: 14px;
 }
 
-.faded-show {
+.popup#alert {
+    position: fixed;
+}
+
+.popup.faded-show,
+#menuDropdown.faded-show,
+#modal.faded-show {
     opacity: 1;
     visibility: inherit !important;
     transition: 0.15s opacity, 0.15s visibility step-start;
 }
 
-.faded-hide {
+.popup.faded-hide,
+#menuDropdown.faded-hide,
+#modal.faded-hide {
     opacity: 0;
     visibility: hidden;
     transition: 0.15s opacity, 0.15s visibility step-end;

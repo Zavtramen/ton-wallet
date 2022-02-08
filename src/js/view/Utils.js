@@ -16,7 +16,13 @@ function toggle(div, visible) {
     div.style.display = d;
 }
 
-function toggleFaded(div, isVisible) {
+function toggleFaded(div, isVisible, params) {
+    params = params || {};
+    if (params.isBack) {
+        div.classList.add('isBack');
+    } else {
+        div.classList.remove('isBack');
+    }
     if (isVisible) {
         div.classList.add('faded-show');
         div.classList.remove('faded-hide');

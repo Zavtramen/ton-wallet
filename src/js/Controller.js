@@ -128,7 +128,7 @@ class Controller {
         this.myAddress = localStorage.getItem('address');
         if (!this.myAddress || !localStorage.getItem('words')) {
             localStorage.clear();
-            this.sendToView('showScreen', {name: 'start'})
+            this.sendToView('showScreen', {name: 'start', noAnimation: true})
         } else {
             if (localStorage.getItem('isLedger') === 'true') {
                 this.isLedger = true;
@@ -493,7 +493,7 @@ class Controller {
 
     initView() {
         if (!this.myAddress || !localStorage.getItem('words')) {
-            this.sendToView('showScreen', {name: 'start'})
+            this.sendToView('showScreen', {name: 'start', noAnimation: true})
         } else {
             this.sendToView('showScreen', {name: 'main', myAddress: this.myAddress});
             if (this.balance !== null) {

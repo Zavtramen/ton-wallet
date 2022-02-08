@@ -20,12 +20,21 @@ const toNano = TonWeb.utils.toNano;
 const formatNanograms = TonWeb.utils.fromNano;
 const BN = TonWeb.utils.BN;
 
-function toggleLottie(lottie, visible) {
+function toggleLottie(lottie, visible, params) {
+    params = params || {};
+    clearTimeout(lottie.hideTimeout);
     if (visible) {
         lottie.player.play();
     } else {
         lottie.player.stop();
-        lottie.ctx.clearRect(0, 0, 1000, 1000);
+
+        if (params.hideDelay) {
+            lottie.hideTimeout = setTimeout(() => {
+                lottie.ctx.clearRect(0, 0, 1000, 1000);
+            }, params.hideDelay)
+        } else {
+            lottie.ctx.clearRect(0, 0, 1000, 1000);
+        }
     }
 }
 
@@ -147,7 +156,10 @@ class View {
         //     window.open('https://exchange.mercuryo.io/?currency=TONCOIN&address=' + this.myAddress, '_blank');
         // });
 
-        $('#import_backBtn').addEventListener('click', () => this.sendMessage('onImportBack'));
+        $('#import_backBtn').addEventListener('click', () => {
+            this.isBack = true;
+            this.sendMessage('onImportBack')
+        });
 
         $('#import_alertBtn').addEventListener('click', () => {
             this.showAlert({
@@ -157,6 +169,7 @@ class View {
                     {
                         label: 'CANCEL',
                         callback: () => {
+                            this.isBack = true;
                             this.sendMessage('onImportBack');
                         }
                     },
@@ -202,7 +215,10 @@ class View {
             }
         });
 
-        $('#wordsConfirm_backBtn').addEventListener('click', () => this.sendMessage('onConfirmBack'));
+        $('#wordsConfirm_backBtn').addEventListener('click', () => {
+            this.isBack = true;
+            this.sendMessage('onConfirmBack');
+        });
 
         $('#wordsConfirm_continueBtn').addEventListener('click', () => {
             const confirmWords = this.getConfirmWords();
@@ -219,6 +235,7 @@ class View {
                         {
                             label: 'SEE WORDS',
                             callback: () => {
+                                this.isBack = true;
                                 this.sendMessage('onConfirmBack');
                             }
                         },
@@ -381,15 +398,18 @@ class View {
         const screens = ['start', 'created', 'backup', 'wordsConfirm', 'import', 'createPassword', 'readyToGo', 'main'];
 
         screens.forEach(screen => {
-            const display = screen === 'main' ? 'flex' : 'block';
-            toggle($('#' + screen), name === screen ? display : false);
+            toggleFaded($('#' + screen), name === screen, {
+                isBack: this.isBack,
+            });
 
             const lottie = lotties[screen];
             if (lottie) {
-                toggleLottie(lottie, name === screen);
+                toggleLottie(lottie, name === screen, {hideDelay: 300}); //300ms, as for screen show/hide animation duration in CSS
             }
         });
         this.currentScreenName = name;
+
+        this.isBack = false;
 
         window.scrollTo(0, 0);
     }
@@ -422,7 +442,7 @@ class View {
 
         //popups switching without animations
         if (this.popup && name) {
-            triggerClass(document.body, 'disable-transitions', 20);
+            triggerClass(document.body, 'disable-animations', 20);
         }
 
         toggleFaded($('#modal'), name !== '');
@@ -438,10 +458,6 @@ class View {
         });
 
         this.popup = name;
-    }
-
-    isPopupVisible(name) {
-        return $('#' + name).style.display === 'block';
     }
 
     closePopup() {
@@ -1004,6 +1020,10 @@ class View {
                 break;
 
             case 'showScreen':
+                if (params.noAnimation) {
+                    triggerClass(document.body, 'disable-animations', 300);
+                }
+
                 this.showScreen(params.name);
 
                 switch (params.name) {
